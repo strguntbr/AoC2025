@@ -1,4 +1,4 @@
-name: AoC 2024 Solutions
+name: AoC 2025 Solutions
 on:
   workflow_dispatch:
     inputs:

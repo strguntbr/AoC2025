@@ -1,4 +1,4 @@
-name: AoC 2024 Tests
+name: AoC 2025 Tests
 on:
   push:
     branches:
