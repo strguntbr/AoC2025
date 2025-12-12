@@ -12,7 +12,9 @@
               productlist/2,
               mapAndAggregate/4,
               mapAndAggregate/5,
-              list/3
+              list/3,
+              select2/4,
+              between/5
           ]).
 :- use_module(library(pio)).
 :- use_module(ansi).
@@ -196,3 +198,11 @@ mapAndAggregate(MapBiFunction, List1, List2, AggregateFunction, Result) :- mapli
 
 list(Length, Generator, List) :- functor(Generator, _, 2), !, LengthZero is Length - 1, findall(Elem, (between(0, LengthZero, I), call(Generator, I, Elem)), List).
 list(Length, Elem, List) :- list(Length, [_,Elem]>>true, List).
+
+select2([H|T], H, E, Rest) :- select(E, T, Rest).
+select2([_|T], E1, E2, Rest) :- select2(T, E1, E2, Rest).
+
+between('[', Low, High, ']', Value) :- between(Low, High, Value).
+between(']', Low, High, '[', Value) :- ActualLow is Low + 1, ActualHigh is High - 1, between(ActualLow, ActualHigh, Value).
+between('[', Low, High, '[', Value) :- ActualHigh is High - 1, between(Low, ActualHigh, Value).
+between(']', Low, High, ']', Value) :- ActualLow is Low + 1, between(ActualLow, High, Value).
