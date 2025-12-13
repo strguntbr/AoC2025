@@ -80,8 +80,8 @@ writeOtherResultLine(StartPos, ResultLine) :- writeln(""), Move is StartPos - 1,
 writeMultilineResult([SingleLine]) :- !, white(SingleLine, WhiteResult), write(WhiteResult).
 writeMultilineResult([FirstLine|OtherLines]) :- !, writeFirstResultLine(FirstLine, StartPos), foreach(member(Line, OtherLines), writeOtherResultLine(StartPos, Line)).
 writeResult(_, _, _) :- p_hideResult, !.
-writeResult(Header, Result, Time) :- string(Result), !, write(Header), split_string(Result, "\n", "", Lines), writeMultilineResult(Lines), formatTime(Time.cpu, FormattedTime), format(' (~w)', FormattedTime). /* split multiline result to list and print as aligned list */
-writeResult(Header, Result, Time) :- white(Result, WhiteResult), formatTime(Time.cpu, FormattedTime), format('~w~w (~w)', [Header, WhiteResult, FormattedTime]).
+writeResult(Header, Result, Time) :- string(Result), !, write(Header), split_string(Result, "\n", "", Lines), writeMultilineResult(Lines), formatTime(Time.wall, FormattedTime), format(' (~w)', FormattedTime). /* split multiline result to list and print as aligned list */
+writeResult(Header, Result, Time) :- white(Result, WhiteResult), formatTime(Time.wall, FormattedTime), format('~w~w (~w)', [Header, WhiteResult, FormattedTime]).
 
 formatTime(Time, FormattedTime) :- Time < 1, !, Ms is round(Time * 1000 * 1000) / 1000, format(atom(FormattedTime), '~3fms', Ms).
 formatTime(Time, FormattedTime) :- Time < 60, !, S is round(Time * 1000) / 1000, format(atom(FormattedTime), '~3fs', S).
@@ -96,7 +96,7 @@ verifyTests(_, _) :- current_predicate(skipTest/0), !, testSkipped(Status), form
 verifyTests(Part, TimingEnabled) :- p_initDynamicTests(Part),
   (
     not(testResult_(_, Part, _, _)) -> (noTests(Status), FormattedTime = "")
-    ; call_time(forall(testResult_(File, Part, AuxData, ExpectedResult), snapshot(verifyTest(File, Part, AuxData, ExpectedResult))), Time), formatTime(Time.cpu, FT), format(atom(FormattedTime), ' (~w)', [FT]), testPassed(Status)
+    ; call_time(forall(testResult_(File, Part, AuxData, ExpectedResult), snapshot(verifyTest(File, Part, AuxData, ExpectedResult))), Time), formatTime(Time.wall, FT), format(atom(FormattedTime), ' (~w)', [FT]), testPassed(Status)
   ),
   (TimingEnabled -> format('[~w]~w', [Status, FormattedTime]) ; format('[~w]', [Status])).
 

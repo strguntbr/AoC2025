@@ -1,6 +1,6 @@
 day(2). testResult(part1, 1227775554). testResult(part2, 4174379265).
 
-:- use_module(lib/solve).
+:- use_module(library(debug)), use_module(lib/solve).
 
 repeat(Prefix, Prefix, 1).
 repeat(Prefix, Id, Repetions) :-
@@ -14,17 +14,17 @@ invalid(Id, Repetions) :-
   repeat(Prefix, Rest, RepetionsN),
   Repetions is RepetionsN + 1.
 
-invalidInRange(Ranges, Repetitions, Id) :-
-  member([Start,End], Ranges), between(Start, End, Id),
+invalidInRange([Start,End], Repetitions, Id) :-
+  between(Start, End, Id),
   number_string(Id, Invalid),
   invalid(Invalid, Repetitions).
 
 resultPart1([Ranges], Count) :-
-  findall(Id, invalidInRange(Ranges, 2, Id), InvalidIds),
+  findall(Id, concurrent_and(member(Range, Ranges), invalidInRange(Range, 2, Id)), InvalidIds),
   sumlist(InvalidIds, Count).
 
 resultPart2([Ranges], Count) :-
-  findall(Id, invalidInRange(Ranges, _, Id), InvalidIds),
+  findall(Id, concurrent_and(member(Range, Ranges), invalidInRange(Range, _, Id)), InvalidIds),
   sort(InvalidIds, UniqueInvalidIds), /* sorting to remove duplicates */
   sumlist(UniqueInvalidIds, Count).
 
