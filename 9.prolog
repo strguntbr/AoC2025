@@ -1,4 +1,8 @@
-day(9). testResult(part1, 50). testResult(part2, 24).
+day(9).
+testResult(part1, 50).
+testResult(part2, 24).
+testResult(part2, "test-1", 22).
+% testResult(part2, "test-2", 16). % This test actually fails due to some assumtions this solution makes (see comment in implementation below)
 
 :- use_module(lib/solve).
 
@@ -33,15 +37,13 @@ resultPart2(RedTiles, MaxSize) :-
     (
       select2(RedTiles, T1, T2, _),
       normalize([T1,T2], [S,E]),
-      /*
-       * Technically there could be a valid rectangle that has crossing borders, if it has
-       * 2 parallel adjacent crossing borders. But my input does not contain such a case (and
-       * I guess nobody elses input does as nobody seems to care about that case) and checking
-       * this special case is not trivial as we would have to allow pairs of adjacent borders,
-       * but only if they do not introduce any 'holes' (which they could). Thus I decided to
-       * just not care and document that part2 might fail if it is called with such a special
-       * case.
-       */
+      % Technically there could be a valid rectangle that has crossing borders, if it has
+      % 2 parallel adjacent crossing borders. But my input does not contain such a case (and
+      % I guess nobody elses input does as nobody seems to care about that case) and checking
+      % this special case is not trivial as we would have to allow pairs of adjacent borders,
+      % but only if they do not introduce any 'holes' (which they could). Thus I decided to
+      % just not care and document that part2 might fail if it is called with such a special
+      % case.
       (\+ crossesBorder(Borders,S,E)),
       insideTile(Borders, S),
       rectangleSize(S, E, Size)
