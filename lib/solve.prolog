@@ -71,7 +71,7 @@ getData(Data) :- p_day(Day), fileForDay(Day, 'input', File), loadData(Data, File
 getData(_) :- write('Error: Could not load puzzle data'), delayedHalt(5).
 checkLoadError([], _) :- !.
 checkLoadError(Error, ErrorHandler) :- format('Error: ~w', [Error]), call(ErrorHandler).
-executePuzzle(Data, Part) :- p_postProcessData(Data, PostprocessedData), p_auxData(AuxData, Part), call_time(p_result(Part, PostprocessedData, AuxData, Result), Time), !, checkError(Result, puzzle), p_formatResult(Result, FormattedResult), writeResult('Result is ', FormattedResult, Time), p_finalize(Result).
+executePuzzle(Data, Part) :- abolish_private_tables, p_postProcessData(Data, PostprocessedData), p_auxData(AuxData, Part), call_time(p_result(Part, PostprocessedData, AuxData, Result), Time), !, checkError(Result, puzzle), p_formatResult(Result, FormattedResult), writeResult('Result is ', FormattedResult, Time), p_finalize(Result).
 executePuzzle(_, _) :- write('Error: could not find result for puzzle data'), delayedHalt(7).
 
 writeFirstResultLine(ResultLine, 0) :- p_notInlineResult, !, writeln(""), white(ResultLine, WhiteResultLine), write(WhiteResultLine).
